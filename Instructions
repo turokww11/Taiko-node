@@ -1,0 +1,40 @@
+Требования:
+
+Минимальные 2 CPU, 4 GB RAM, 50 GB SSD, Ubuntu 20.04
+Рекомендуемые 4 CPU, 16GB RAM, 1000 GB SSD, Ubuntu 20.04
+Установка Docker
+Теперь нужно по порядку прописывать команды (по ходу вас могут просить нажать Y, делайте это когда нужно). Команды следующие:
+
+sudo apt-get update
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg > /dev/null
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+После этого пишем следующее, чтобы проверить корректность работы:
+
+sudo docker run hello-world
+Если все работает исправно, вы должны увидеть сообщение "Hello from Docker! This message shows that your installation appears to be working correctly."
+
+Установка ноды
+Прописываем следующие команды:
+
+git clone https://github.com/taikoxyz/simple-taiko-node.git
+cd simple-taiko-node
+cp .env.sample .env
+nano .env
+Далее стрелками на клавиатуре нужно долистать до полей, которые нужно отредактировать:
+
+ENABLE_PROPOSER = false нужно поменять на true
+L1_PROPOSER_PRIVATE_KEY = тут нужно вставить приватный ключ из вашего МетаМаска (открываете расширение -> три точки в правом верхнем углу -> Реквизиты счета -> Экспорт закрытого ключа)
+L2_SUGGESTED_FEE_RECIPIENT = тут нужно вставить ваш адрес МетаМаска (в формате 0x…)
+Далее жмем CTRL+O, Enter, и потом CTRL+X, чтобы выйти. Теперь запускаем ноду следующей командой:
+
+docker compose up -d
